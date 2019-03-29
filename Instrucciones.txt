@@ -1,0 +1,21 @@
+Para la ejecución del archivo se debe ingresar los siguientes comandos:
+
+1. Para mostrar el promedio de un estudiantes dado
+node index mostrarprom -n lorena
+
+El nombre puede variar por: Merida
+			    Pedro
+			    juan
+			    lorena
+2. Para mostrar los estudiantes que tienen un promedio superior a 3
+node index mostrarprom3
+
+El resto de comando se ejecuta y tiene la misma funcionalidad que el mostrado en el curso
+crear
+mostrar
+mostrarest
+mostrarmat
+mostrarprom
+mostrarprom3
+
+Nota: No olvidar instalar las librerias: yargs

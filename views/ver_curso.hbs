@@ -1,0 +1,13 @@
+{{>header}}
+    <h1>Ver cursos como administrador</h1>
+    {{{listarCursos}}}
+    <div>
+       
+        <h3>Actualizar estado de un curso</h3>
+        {{{listarCursoInscribir}}}
+        <a class="btn btn-primary btn-lg" href="{{actualizarCurso '#cursoSeleccionado'}}" role="button">Actualizar &raquo;</a>        
+    </div>
+
+    <h1>Ver cursos como interesado</h1>
+    {{{listarCursosInteresado}}}
+{{>footer}}

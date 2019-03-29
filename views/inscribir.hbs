@@ -1,0 +1,22 @@
+{{>header}}
+<div class="" id="collapseIncribir">
+    <form action="/inscribir_verificado" method="post">
+        <label for="identificacion">Documento de identidad</label>
+        <input type="number" name="identificacion">
+
+        <label for="nombre">nombre</label>
+        <input type="text" name="nombre">
+
+        <label for="correo">Correo</label>
+        <input type="text" name="correo">
+
+        <label for="telefono">telefono</label>
+        <input type="text"  name="telefono">
+
+        <label for="curso">Seleccione un curso</label>
+        {{{listarCursoInscribir}}}
+        <button class="btn btn-primary">Inscribir</button>
+    </form>
+</div>
+
+{{>footer}}
