@@ -1,21 +1,12 @@
-Para la ejecución del archivo se debe ingresar los siguientes comandos:
+Para la ejecución del archivo se deben seguir la siguientes intrucciones
 
-1. Para mostrar el promedio de un estudiantes dado
-node index mostrarprom -n lorena
+1. Descargar o clonar el repositorio de github: https://github.com/santiagoQuinter/NodeTDEA
 
-El nombre puede variar por: Merida
-			    Pedro
-			    juan
-			    lorena
-2. Para mostrar los estudiantes que tienen un promedio superior a 3
-node index mostrarprom3
+2. Asegurarse de que todas las librerías que esten en el package json esten bien instaladas
 
-El resto de comando se ejecuta y tiene la misma funcionalidad que el mostrado en el curso
-crear
-mostrar
-mostrarest
-mostrarmat
-mostrarprom
-mostrarprom3
+3. Abrir la carpeta con el cmd y escribir el comando para ejecutar node src/app 
 
-Nota: No olvidar instalar las librerias: yargs
+4. Ingresar al navegardor y copiar: http://localhost:3000 para inciar la aplicación web
+
+5. Seguir las instrucciones del pdf segundas historias de usuario para verificar la completitud de la entrega
+
