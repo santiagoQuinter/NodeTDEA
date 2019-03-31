@@ -116,8 +116,8 @@ const listarCursosInteresado =()=> {
                     <h5 class="mb-0">
                         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
                         Nombre del curso: ${curso.nombre}
-                        Valor: ${curso.valor} <br>
-                        nombre: ${curso.descripcion}    
+                        >>>Valor: ${curso.valor} <br>
+                        Descripción: ${curso.descripcion}    
                         </button>
                     </h5>
                     </div>
@@ -234,6 +234,8 @@ const verInscritos = () => {
                     <div id="collapse${i}" class="collapse" aria-labelledby="heading${i}" data-parent="#accordionExample">
                     <div class="card-body">
 
+                    <form action='/eliminar_aspirante' method='post'>
+                    
                     <table class="table">
                     <thead class="thead-dark">
                     <tr>
@@ -254,8 +256,7 @@ const verInscritos = () => {
                             <td>${aspirante.nombre}</td>
                             <td>${aspirante.correo}</td>
                             <td>${aspirante.telefono}</td>
-                            <td>
-                            <a class="btn btn-danger btn-lg" href="{{actualizarCurso ${aspirante.identificacion}}}" role="button">Eliminar &raquo;</a>        
+                            <td><button type="submit" name="EliminarAspirante" value="${aspirante.identificacion}" class="btn btn-danger"> Eliminar</button> </td>
                             </tr>`;
             });
         }
@@ -269,10 +270,45 @@ const verInscritos = () => {
     return retorno;  
 }
 
-const prueba = () =>{
-    console.log("prueba de conexión el boton")
-    return "Probado";
+const eliminarAspirante = (aspirante)=>{
+    //console.log("Identificación del estudiante a eliminar: " + aspirante);
+    listarAspirante();
+    let indice = listaAspirantes.findIndex(buscar => buscar.identificacion ==aspirante);
+    if(!indice){
+        //console.log('El aspirante no existe');
+    }else {
+        //Remplaza la lista de estudiantes por la nueva(sin el estudiante eliminado)
+        listaAspirantes.splice(indice,1);
+        guardarAspirante();
+        //console.log("Identificación del estudiante a eliminar: " + aspirante);
+        return `<div class="alert alert-danger" role="alert">
+                El aspirante ha sido eliminado exitosamente
+                </div>`;
+    }
+
 }
+
+
+
+//Actualiza el curso de disponible a cerrado y de cerrado a disponible
+const actualizarCurso =(curso)=>{
+    listar();
+    let cur = listaCursos.find(buscar => buscar.id == curso);
+    if(!cur){
+        console.log("El curso no existe");
+    }else{
+        if(cur.estado=='disponible'){
+            cur.estado='cerrado'
+        }else{
+            cur.estado='disponible'
+        }
+        guardar();
+        return `<div class="alert alert-success" role="alert">
+                El aspirante ha sido eliminado exitosamente
+                </div>`;
+    }
+}
+
 
 module.exports = {
     crear,
@@ -281,4 +317,6 @@ module.exports = {
     listarCursoInscribir,
     inscribirAspirante,
     verInscritos,
+    eliminarAspirante,
+    actualizarCurso
 }

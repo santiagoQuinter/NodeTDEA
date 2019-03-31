@@ -2,10 +2,11 @@
     <h1>Ver cursos como administrador</h1>
     {{{listarCursos}}}
     <div>
-       
-        <h3>Actualizar estado de un curso</h3>
-        {{{listarCursoInscribir}}}
-        <a class="btn btn-primary btn-lg" href="{{actualizarCurso '#cursoSeleccionado'}}" role="button">Actualizar &raquo;</a>        
+         <form action='/actualizar_curso' method='post'>
+            <h3>Actualizar estado de un curso</h3>
+            {{{listarCursoInscribir}}}
+            <button type="submit" class="btn btn-primary btn-lg"> Actualizar &raquo; </button>  
+          </form>         
     </div>
 
     <h1>Ver cursos como interesado</h1>

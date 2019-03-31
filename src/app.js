@@ -90,6 +90,20 @@ app.use('/crear_curso',(req,res)=>{
     res.render('crear_curso');
 });
 
+//llama a la página de eliminar_aspirante para eliminar el aspirante del curso 
+app.use('/eliminar_aspirante',(req,res)=>{
+    res.render('eliminar_aspirante',{
+        identificacion: parseInt(req.body.EliminarAspirante)
+    });
+});
+
+//Llama a la página actualizar_curso para actulizar el estado del curso
+app.use('/actualizar_curso',(req,res)=>{
+    res.render('actualizar_curso',{
+        curso: parseInt(req.body.curso)
+    });
+});
+
 //Para escribri error en caso de que se accesa a una página
 //diferente al index por método get
 app.get('*',(req,res)=>{

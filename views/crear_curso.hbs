@@ -1,19 +1,31 @@
 {{>header}}
-    <div class="" id="collapseFormulario">
-        <form action="/crear_curso_verificado" method="post">
+    <form action="/crear_curso_verificado" method="post">
+        <div class="form-group">
             <label for="id">Id</label>
-            <input type="number" name="id">
+            <input type="number" name="id"  class="form-control" required>
+        </div>
+        <div class="form-group">   
             <label for="nombre">nombre</label>
-            <input type="text" name="nombre">
+            <input type="text" name="nombre" class="form-control"  required>
+        </div>
             <label for="valor">Valor</label>
-            <input type="number" name="valor">
+            <input type="number" name="valor" class="form-control"  required>
+        <div class="form-group">
             <label for="modalidad">modalidad</label>
-            <input type="text" name="modalidad">
+            <select class="form-control" id="exampleFormControlSelect1" name="modalidad">
+                <option>virtual</option>
+                <option>presencial</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="intensidadHoraria">Intensidad horaria</label>
-            <input type="number "  name="intensidadHoraria">
+            <input type="number "  name="intensidadHoraria" class="form-control">
+        </div>
+        <div class="form-group">
             <label for="descripción">descripción</label>
-            <input type="text"  name="descripcion">
-            <button class="btn btn-primary">Crear curso</button>
-        </form>
-    </div> 
+            <textarea type="text"  name="descripcion" class="form-control" rows="3"  required></textarea>
+        </div>
+        <button class="btn btn-primary">Crear curso</button>
+        
+    </form>
 {{>footer}}

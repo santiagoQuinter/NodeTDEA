@@ -45,6 +45,12 @@ hbs.registerHelper('verInscritos',()=>{
     return funciones.verInscritos();
 });
 
+
+hbs.registerHelper('eliminarAspirante',(identificacion)=>{
+    return funciones.eliminarAspirante(identificacion);
+
+});
+
 hbs.registerHelper('actualizarCurso',(curso)=>{
-    return console.log("El curso es" + curso);
-})
+    return funciones.actualizarCurso(curso);
+});
