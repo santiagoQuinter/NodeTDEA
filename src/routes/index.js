@@ -9,7 +9,6 @@ const Curso = require('../models/curso');
 const Cursoxusuario = require('../models/cursoxusuario')
 
 
-
 //Indicar en donde están los partials
 const directorioViews = path.join(__dirname,'../../template/views')
 const directorioPartials = path.join(__dirname,'../../template/partials');
@@ -143,7 +142,7 @@ app.post('/inscribir_verificado',(req,res)=>{
         if(err){
             return console.log('Error al buscar en cursoxusuario' + err);
         }
-        if(respuesta){
+        if(respuesta>=1){
             res.render('inscribir_verificado',{
                 respuestainscribir: `<div class="alert alert-danger" role="alert">
                             El usuario ya se encuentra registrado en este curso
@@ -171,6 +170,18 @@ app.post('/inscribir_verificado',(req,res)=>{
                 });
             });
         }
+    });
+});
+
+
+app.get('/ver_inscritos',(req,res)=>{
+    Curso.find({}).exec((err,respuesta)=>{
+        if(err){
+            return console.log('Error al ver_curso'+ err);
+        }
+        res.render('ver_inscritos',{
+            cursos: respuesta
+        });
     });
 });
 

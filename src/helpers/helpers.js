@@ -1,3 +1,6 @@
+const Usuario = require('../models/usuario');
+const Cursoxusuario = require('../models/cursoxusuario')
+
 //helper(funciones terminadas en hbs)
 const hbs = require('hbs');
 //trae funciones
@@ -76,6 +79,80 @@ hbs.registerHelper('listarCursosInteresado', (listado)=>{
     return retorno;
 });
 
+hbs.registerHelper('verInscritos',(listaCursos)=>{
+    let retorno=``;
+    //Recorro la lista de cursos y por cada uno busco los aspirantes de dicho curso
+    i=0
+    listaCursos.forEach(cursos => {
+            retorno += `<div class="card accordion" id="accordionExample">
+                        <div class="card-header" id="heading${i}">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
+                                Nombre del curso: ${cursos.nombre}
+                                </button>
+                            </h5>
+                        </div>  
+
+                        <div id="collapse${i}" class="collapse" aria-labelledby="heading${i}" data-parent="#accordionExample">
+                        <div class="card-body">
+
+                        <form action='/eliminar_aspirante' method='post'>
+                        
+                        <table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Documento</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Correo</th>
+                            <th scope="col">Teléfono</th>
+                            <th scope="col">Eliminar</th>
+                        </tr>
+                        </thead>
+                        <tbody>`;  
+
+            Cursoxusuario.find({id:cursos.id}).exec((err,respuesta)=>{
+                if(err){
+                    return console.log('Error al realiar la consulta de cursoxusuario por cada curso'+ err);
+                }
+           
+            //si la lista de matriculado es igual a cero no hay estudiantes en el curso
+            if (respuesta.length >=1) {  
+                     
+                respuesta.forEach(aspirante => {
+                               
+                    Usuario.find({cedula:aspirante.cedula}).exec((err,respuestaUsuario)=>{
+                        console.log('llegueeeeeeeeeeeee')  
+                        if(respuestaUsuario>=1){
+                            console.log('nulooooooooo'+respuesta.nombre +'   '+respuesta.cedula)  
+                        }
+                        if(err){
+                            return console.log('Error al consultar el curso desde cursoxusuario(compara cédulas)'+ err);
+                        }
+                        retorno += `<tr>    
+                                    <td>${respuestaUsuario.cedula}</td>                
+                                    <td>${respuestaUsuario.nombre}</td>
+                                    <td>${respuestaUsuario.correo}</td>
+                                    <td>${respuestaUsuario.telefono}</td>
+                                    <td><button type="submit" name="EliminarAspirante" value="${respuestaUsuario.cedula}" class="btn btn-danger"> Eliminar</button> </td>
+                                    </tr>`;
+                    });
+                });
+            }
+        });
+        retorno += `
+                    </tbody>
+                    </table>
+                    </div>
+                    </div>
+                    </div>`;   
+        i++;
+    });
+
+    return retorno;  
+});
+
+
+
 
 
 
@@ -98,11 +175,6 @@ hbs.registerHelper('crearCurso',(id, nombre, valor, descripcion, modalidad, inte
 });
 
 
-
-
-
-
-
 hbs.registerHelper('inscribirAspirante',(identificacion, nombre, correo, telefono, curso)=>{
     let aspi={
         identificacion:identificacion,
@@ -114,9 +186,6 @@ hbs.registerHelper('inscribirAspirante',(identificacion, nombre, correo, telefon
     return funciones.inscribirAspirante(aspi);
 });
 
-hbs.registerHelper('verInscritos',()=>{
-    return funciones.verInscritos();
-});
 
 
 hbs.registerHelper('eliminarAspirante',(identificacion)=>{
