@@ -7,6 +7,9 @@ const hbs = require('hbs');
 const Usuario = require('../models/usuario');
 const Curso = require('../models/curso');
 const Cursoxusuario = require('../models/cursoxusuario')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
 
 
 //Indicar en donde están los partials
@@ -38,20 +41,28 @@ app.post('/',(req, res)=>{
        cedula: req.body.cedula,
        nombre: req.body.nombre,
        correo: req.body.correo,
-       telefono: req.body.telefono
+       telefono: req.body.telefono,
+       contraseña: bcrypt.hashSync(req.body.contraseña, 10)
     });
 
     //Guardamos el usuario en la base de datos
     usuario.save((err,resultado)=>{
         if(err){
-            res.render('indexpost',{
+            return res.render('indexpost',{
                 //la varible mostrar debe estar en indexpost
-                mostrar: err
+                mostrar: `<div class="alert alert-danger" role="alert">
+                       El usuario con cédula ${req.body.cedula} ya existe en la base de datos 
+                       por favor ingrese que no este registrada
+                        </div>`
             });
         }
             res.render('indexpost',{
                 //la varible mostrar debe estar en indexpost
-                mostrar: 'Bienvenid@  ' + resultado.nombre + '  tú registro ha sido exitos'    
+                mostrar: `<div class="alert alert-success" role="alert">
+                            Bienvenid@  ${resultado.nombre} al sistema de cursos online, tú registro ha sido exitoso,
+                            esperamos que aproveches y disfrutes al maximo esta plataforma. Equipo de curso online
+                             </div>`
+                    
             });
     });
 });
@@ -71,15 +82,21 @@ app.post('/crear_curso_verificado',(req,res)=>{
     });
     curso.save((err, resultado)=>{
         if(err){
-            res.render('crear_curso_verificado',{
+            return res.render('crear_curso_verificado',{
                 respuesta: `<div class="alert alert-danger" role="alert">
-                            Error al ingresar el curso en la base de datos
+                            El curso con el id ${req.body.id} ya se encuentra en la base de datos
+                            por ingrese un id que no este en la base de datos
                             </div>`
             });
         }
         res.render('crear_curso_verificado',{
             respuesta: `<div class="alert alert-success" role="alert">
-                        El curso ${resultado.nombre} fue creado exitosamente
+                        El curso ${resultado.nombre} fue creado exitosamente <br>
+                        Tiene un id de: ${resultado.id} <br>
+                        Una duración de: ${resultado.intensidadHoraria} horas <br>
+                        Un precio de: ${resultado.valor} <br>
+                        La modalidad es: ${resultado.modalidad} <br>
+                        Y su descripción es: ${resultado.descripcion} <br>
                         </div>`
         })
     });
@@ -140,12 +157,16 @@ app.get('/inscribir',(req,res)=>{
 app.post('/inscribir_verificado',(req,res)=>{
     Cursoxusuario.find({id:req.body.curso,cedula:req.body.cedula}).exec((err,respuesta)=>{
         if(err){
-            return console.log('Error al buscar en cursoxusuario' + err);
+            return res.render('inscribir_verificado',{
+                respuestainscribir:`<div class="alert alert-danger" role="alert">
+                                     Ocurrio un erro al intentar registrar el curso en la base de datos
+                                    </div>`    
+            }) 
         }
-        if(respuesta>=1){
+        if(respuesta.length>=1){
             res.render('inscribir_verificado',{
                 respuestainscribir: `<div class="alert alert-danger" role="alert">
-                            El usuario ya se encuentra registrado en este curso
+                                usted ya se encuentra registrad@ en este curso
                             </div>`
             });
         }else{
@@ -156,7 +177,7 @@ app.post('/inscribir_verificado',(req,res)=>{
         
             cursoxusuario.save((err, resultado)=>{
                 if(err){
-                    res.render('inscribir_verificado',{
+                    return res.render('inscribir_verificado',{
                         respuestainscribir: `<div class="alert alert-danger" role="alert">
                                     Error al ingresar el curso en la base de datos
                                     </div>`
@@ -183,6 +204,39 @@ app.get('/ver_inscritos',(req,res)=>{
             cursos: respuesta
         });
     });
+});
+
+app.post('/ingresar',(req,res)=>{
+    Usuario.findOne({nombre:req.body.usuario},(err,resultado)=>{
+        if(err){
+            return res.render('ingresar',{
+                mensaje: `<div class="alert alert-danger" role="alert">
+                            Ocurrió un error al interno favor intente de nuevo más tarde
+                            </div>`
+            })
+        }
+        if(!resultado){
+            return res.render('ingresar',{
+                mensaje: `<div class="alert alert-danger" role="alert">
+                            Ocurrió un error las credenciales del usuario no son validas por favor intente de nuevo
+                            </div>`
+            })    
+        }
+        if(!bcrypt.compareSync(req.body.contraseña, resultado.contraseña)){
+            return res.render('ingresar',{
+                mensaje: `<div class="alert alert-danger" role="alert">
+                            Ocurrió un error las credenciales del usuario no son validas por favor intente de nuevo
+                            </div>`
+            }) 
+        }
+        res.render('ingresar',{
+            mensaje: `<div class="alert alert-success" role="alert">
+                        Bienvenid@ ${resultado.nombre} al sistema de cursos
+                        </div>`
+        }) 
+
+    });
+    
 });
 
 //Página de error

@@ -7,6 +7,15 @@ const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+//jsonwebtoken
+const jwt = require('jsonwebtoken');
+
+//localstorage: si no encuentra un local storage donde almacenar las cosas
+//crea una carpeta llamada scratch  para guardar dicha información
+if (typeof localStorage === "undefined" || localStorage === null) {
+    var LocalStorage = require('node-localstorage').LocalStorage;
+    localStorage = new LocalStorage('./scratch');
+  }
 
 
 //path para organizar las carpetas
@@ -23,6 +32,11 @@ app.use('/css', express.static(dirNode_modules + '/bootstrap/dist/css'));
 app.use('/js', express.static(dirNode_modules + '/jquery/dist'));
 app.use('/js', express.static(dirNode_modules + '/popper.js/dist'));
 app.use('/js', express.static(dirNode_modules + '/bootstrap/dist/js'));
+
+//midewore: En este caso solo deja que siga el proceso
+app.use((req,res,next)=>{
+    next()
+})
 
 
 //BodyParser

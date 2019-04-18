@@ -54,28 +54,31 @@ hbs.registerHelper('listarCursosInteresado', (listado)=>{
     i=1
     listado.forEach(curso => {
     //Solo muestra los cursos disponibles
-    retorno += `<div class="card">
-                    <div class="card-header" id="heading${i}">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
-                        Nombre del curso: ${curso.nombre}
-                        >>>Valor: ${curso.valor} <br>
-                        Descripción: ${curso.descripcion}    
-                        </button>
-                    </h5>
-                    </div>
-                    <div id="collapse${i}" class="collapse" aria-labelledby="heading${i}" data-parent="#accordionExample">
-                        <div class="card-body">
-                            <b> Nombre:</b> ${curso.nombre} <br>
-                            <b> Valor:</b> ${curso.valor} <br>
-                            <b> Descripción:</b> ${curso.descripcion} <br>
-                            <b> Modalidad:</b> ${curso.modalidad} <br>
-                            <b> Intensidad horaria:</b> ${curso.intensidadHoraria} <br>
+    retorno += `<div class="container row">
+                    <div class="card col-xs-6 col-sm-5">
+                        <div class="card-header " id="heading${i}">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
+                            Nombre del curso: ${curso.nombre} <br>
+                            Valor: ${curso.valor} <br> 
+                            </button>
+                        </h5>
                         </div>
-                    </div>`;
-                    i++;
+                        <div id="collapse${i}" class="collapse" aria-labelledby="heading${i}" data-parent="#accordionExample">
+                            <div class="card-body">
+                                <b> Nombre:</b> ${curso.nombre} <br>
+                                <b> Valor:</b> ${curso.valor} <br>
+                                <b> Descripción:</b> ${curso.descripcion} <br>
+                                <b> Modalidad:</b> ${curso.modalidad} <br>
+                                <b> Intensidad horaria:</b> ${curso.intensidadHoraria} <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                i++;
+                
     });
-    retorno += `</div>`;
+    //retorno += `</div>`;
     return retorno;
 });
 
@@ -110,45 +113,42 @@ hbs.registerHelper('verInscritos',(listaCursos)=>{
                         </thead>
                         <tbody>`;  
 
+                
             Cursoxusuario.find({id:cursos.id}).exec((err,respuesta)=>{
                 if(err){
                     return console.log('Error al realiar la consulta de cursoxusuario por cada curso'+ err);
-                }
-           
+                }                           
             //si la lista de matriculado es igual a cero no hay estudiantes en el curso
-            if (respuesta.length >=1) {  
-                     
+            if (respuesta.length >=1) {                       
                 respuesta.forEach(aspirante => {
-                               
-                    Usuario.find({cedula:aspirante.cedula}).exec((err,respuestaUsuario)=>{
-                        console.log('llegueeeeeeeeeeeee')  
-                        if(respuestaUsuario>=1){
-                            console.log('nulooooooooo'+respuesta.nombre +'   '+respuesta.cedula)  
-                        }
+                    //console.log("id en curso x usuarioc"  + aspirante.id + "Identificacion del aspirante es: " + aspirante.cedula);             
+                    Usuario.findOne({cedula:aspirante.cedula}).exec((err,respuestaUsuario)=>{
                         if(err){
                             return console.log('Error al consultar el curso desde cursoxusuario(compara cédulas)'+ err);
                         }
-                        retorno += `<tr>    
-                                    <td>${respuestaUsuario.cedula}</td>                
-                                    <td>${respuestaUsuario.nombre}</td>
-                                    <td>${respuestaUsuario.correo}</td>
-                                    <td>${respuestaUsuario.telefono}</td>
-                                    <td><button type="submit" name="EliminarAspirante" value="${respuestaUsuario.cedula}" class="btn btn-danger"> Eliminar</button> </td>
-                                    </tr>`;
-                    });
+                        if(respuestaUsuario){
+                            //console.log('la cedula de usuario es: ' + respuestaUsuario.cedula + 'el id del curso es ' + cursos.id + "nombre del usuario es: "+ respuestaUsuario.nombre)  
+                            retorno += `<tr>    
+                                        <td>${respuestaUsuario.cedula}</td>                
+                                        <td>${respuestaUsuario.nombre}</td>
+                                        <td>${respuestaUsuario.correo}</td>
+                                        <td>${respuestaUsuario.telefono}</td>
+                                        <td><button type="submit" name="EliminarAspirante" value="${respuestaUsuario.cedula}" class="btn btn-danger"> Eliminar</button> </td>
+                                        </tr>`;
+                        }
+
+                    });                    
                 });
             }
         });
-        retorno += `
-                    </tbody>
+        retorno += `</tbody>
                     </table>
                     </div>
-                    </div>
                     </div>`;   
-        i++;
     });
-
+    
     return retorno;  
+
 });
 
 

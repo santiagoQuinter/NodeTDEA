@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
 //Creamos un Schema
 const Schema = mongoose.Schema;
-
 const usuarioSchema = new Schema({
     cedula:{
         type: Number,
-        required: true
+        required: true,
+        unique: true,
+        trim: true
     },
     nombre:{
         type: String,
@@ -22,8 +24,14 @@ const usuarioSchema = new Schema({
     rol:{
         type:String,
         default: 'aspirante'
+    },
+    contraseña:{
+        type:String,
+        required:true,
+        trim: true
     }
 });
+usuarioSchema.plugin(uniqueValidator,{message: 'Error, Ya existe un usuario con la misma cedula' });
 
 //Crear un modelo que va a utilizar ese Schema
 const Usuario = mongoose.model('usuario',usuarioSchema);
