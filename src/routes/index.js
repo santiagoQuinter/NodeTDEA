@@ -229,6 +229,15 @@ app.post('/ingresar',(req,res)=>{
                             </div>`
             }) 
         }
+
+        //token cuando la persona ingresa
+        let token=jwt.sign({
+            data: resultado
+            }, 'cursos-online-123', { expiresIn: '1h' });
+        //Enviamos el token al local storage
+        localStorage.setItem('token', token);
+        console.log(token)
+
         res.render('ingresar',{
             mensaje: `<div class="alert alert-success" role="alert">
                         Bienvenid@ ${resultado.nombre} al sistema de cursos
@@ -238,6 +247,12 @@ app.post('/ingresar',(req,res)=>{
     });
     
 });
+
+app.get('/salir',(req,res)=>{
+    localStorage.setItem('token','')
+    res.redirect('/')
+});
+
 
 //Página de error
 app.get('*',(req,res)=>{

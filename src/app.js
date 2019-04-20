@@ -35,6 +35,18 @@ app.use('/js', express.static(dirNode_modules + '/bootstrap/dist/js'));
 
 //midewore: En este caso solo deja que siga el proceso
 app.use((req,res,next)=>{
+    //leemos el token para saber si ingreso o no
+    let token= localStorage.getItem(token);
+    jwt.verify(token, 'cursos-online-123',(err, decoded)=> {
+        if(err){
+            return next()
+        }
+        console.log(decoded.foo) // bar
+        res.locals.session = true
+        res.locals.nombre = decoded.data.nombre
+        req.usuario = decoded.data
+        next()
+      });
     next()
 })
 
